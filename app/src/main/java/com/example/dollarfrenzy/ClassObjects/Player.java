@@ -22,8 +22,8 @@ public class Player {
     }
     private void addPlayer(){
         Random r = new Random();
-        int x = r.nextInt(b.getSize()-2)+1;
-        int y = r.nextInt(b.getSize()-2)+1;
+        int x = r.nextInt(b.getSize()-1)+1;
+        int y = r.nextInt(b.getSize()-1)+1;
         locationX = x;
         locationY = y;
         b.getMatrix()[x][y] = Board.PLAYER;
@@ -43,18 +43,7 @@ public class Player {
     public boolean move(String command){
         switch (command) {
             case "UP":
-                if (locationY+2==b.getSize()){
-                    Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return false;
-                }
-                else{
-                    b.getMatrix()[locationX][locationY] = Board.EMPTY;
-                    locationY++;
-                    b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return true;
-                }
-            case "DOWN":
-                if (locationY-2<0){
+                if (locationY-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
                     return false;
                 }
@@ -64,25 +53,36 @@ public class Player {
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
                     return true;
                 }
-            case "LEFT":
-                if (locationX+2==b.getSize()){
+            case "DOWN":
+                if (locationY+1==b.getSize()){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
                     return false;
                 }
                 else{
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
-                    locationX++;
+                    locationY++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
                     return true;
                 }
-            case "RIGHT":
-                if (locationX-2<0){
+            case "LEFT":
+                if (locationX-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
                     return false;
                 }
                 else{
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationX--;
+                    b.getMatrix()[locationX][locationY] = Board.PLAYER;
+                    return true;
+                }
+            case "RIGHT":
+                if (locationX+1==b.getSize()){
+                    Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                else{
+                    b.getMatrix()[locationX][locationY] = Board.EMPTY;
+                    locationX++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
                     return true;
                 }

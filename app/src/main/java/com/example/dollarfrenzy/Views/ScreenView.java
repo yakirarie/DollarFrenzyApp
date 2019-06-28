@@ -5,10 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.dollarfrenzy.ClassObjects.Board;
+import com.example.dollarfrenzy.R;
 
 public class ScreenView extends View {
     private Paint mPaint = new Paint();
@@ -26,15 +28,14 @@ public class ScreenView extends View {
         super.onDraw(canvas);
 
         if(mBoard != null){
-            float tileSizeX = canvas.getWidth()/mBoard.getSize();
-            float tileSizeY = canvas.getHeight()/mBoard.getSize();
+            float tileSizeX = (float)getWidth()/mBoard.getSize();
+            float tileSizeY = (float)getHeight()/mBoard.getSize();
             float circleSize = Math.min(tileSizeX,tileSizeY)/2;
-
             for(int i=0 ;i<mBoard.getSize();i++){
                 for(int j=0;j<mBoard.getSize();j++){
                     switch (mBoard.getMatrix()[i][j]){
                         case Board.EMPTY:
-                            mPaint.setColor(Color.WHITE);
+                            mPaint.setColor(ContextCompat.getColor(getContext(),R.color.canvas));
                             break;
                         case Board.FRUIT:
                             mPaint.setColor(Color.RED);
@@ -42,15 +43,9 @@ public class ScreenView extends View {
                         case Board.PLAYER:
                             mPaint.setColor(Color.GREEN);
                             break;
-                        case Board.WALLS_LR:
-                            mPaint.setColor(Color.BLACK);
-                            break;
-                        case Board.WALLS_UD:
-                            mPaint.setColor(Color.BLACK);
-                            break;
                     }
 
-                    canvas.drawCircle(i*tileSizeX+tileSizeX/2f+circleSize/2 , j*tileSizeY+tileSizeY/2f +circleSize/2,circleSize,mPaint);
+                    canvas.drawCircle(i*tileSizeX+tileSizeX/2f , j*tileSizeY+tileSizeY/2f,circleSize,mPaint);
                 }
             }
 

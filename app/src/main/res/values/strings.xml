@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Dollar Frenzy</string>
+    <string name="app_name">Red Rush</string>
+    <string name="try_again">Try Again</string>
+    <string name="back">Back to Main Menu</string>
 </resources>
