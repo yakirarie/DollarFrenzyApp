@@ -3,5 +3,6 @@
     <string name="try_again">Try Again</string>
     <string name="back">Back to Main Menu</string>
     <string name="explain">Get All The Red Dots Before Half the Stage Is Red!\n- Survival Game -</string>
+    <string name="start">start</string>
 
 </resources>
