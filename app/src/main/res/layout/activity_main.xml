@@ -9,11 +9,15 @@
 
   <Button
       android:id="@+id/button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="28dp"
+      android:layout_width="212dp"
+      android:layout_height="42dp"
+      android:layout_marginBottom="154dp"
+      android:background="#2196F3"
+      android:lineSpacingExtra="18sp"
       android:onClick="start"
       android:text="start"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/editText" />
@@ -22,11 +26,42 @@
       android:id="@+id/editText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="256dp"
+      android:layout_marginBottom="20dp"
       android:ems="10"
       android:hint="enter board size (4 - 40)"
       android:inputType="number"
+      app:layout_constraintBottom_toTopOf="@+id/button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginBottom="11dp"
+      android:src="@drawable/pixeredrush"
+      app:layout_constraintBottom_toTopOf="@+id/textView"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:id="@+id/textView"
+      android:layout_width="323dp"
+      android:layout_height="115dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="14dp"
+      android:fontFamily="sans-serif-condensed"
+      android:text="@string/explain"
+      android:textAlignment="center"
+      android:textAllCaps="true"
+      android:textColor="#3F51B5"
+      android:textSize="24sp"
+      android:textStyle="bold|italic"
+      app:layout_constraintBottom_toTopOf="@+id/editText"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/imageView" />
 </android.support.constraint.ConstraintLayout>
