@@ -37,11 +37,11 @@ public class Board {
 
     public void addFruit(){
         Random r = new Random();
-        int x = r.nextInt(size-1)+1;
-        int y = r.nextInt(size-1)+1;
+        int x = r.nextInt(size);
+        int y = r.nextInt(size);
         while (matrix[x][y] == PLAYER || matrix[x][y] == FRUIT){
-            x = r.nextInt(size-1)+1;
-            y = r.nextInt(size-1)+1;
+            x = r.nextInt(size);
+            y = r.nextInt(size);
         }
         matrix[x][y] = FRUIT;
     }

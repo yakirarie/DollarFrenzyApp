@@ -22,8 +22,8 @@ public class Player {
     }
     private void addPlayer(){
         Random r = new Random();
-        int x = r.nextInt(b.getSize()-1)+1;
-        int y = r.nextInt(b.getSize()-1)+1;
+        int x = r.nextInt(b.getSize());
+        int y = r.nextInt(b.getSize());
         locationX = x;
         locationY = y;
         b.getMatrix()[x][y] = Board.PLAYER;
