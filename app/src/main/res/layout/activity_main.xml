@@ -30,6 +30,7 @@
       android:layout_marginBottom="20dp"
       android:ems="10"
       android:hint="enter board size (4 - 40)"
+      android:maxLength="4"
       android:inputType="number"
       app:layout_constraintBottom_toTopOf="@+id/button"
       app:layout_constraintEnd_toEndOf="parent"
