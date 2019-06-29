@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="canvas">#707DC9</color>
+    <color name="dark_canvas">#3948A3</color>
     <color name="white">#FFFFFF</color>
 
 </resources>

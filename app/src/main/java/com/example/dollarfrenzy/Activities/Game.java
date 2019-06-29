@@ -2,12 +2,10 @@ package com.example.dollarfrenzy.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.widget.Toast;
-
 import com.example.dollarfrenzy.ClassObjects.Board;
 import com.example.dollarfrenzy.ClassObjects.Player;
 import com.example.dollarfrenzy.Listeners.OnSwipeTouchListener;
@@ -21,9 +19,8 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setFinishOnTouchOutside(true);
-
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
         int size = getIntent().getIntExtra("size",3);
