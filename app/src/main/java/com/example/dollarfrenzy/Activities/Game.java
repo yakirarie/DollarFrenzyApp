@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -17,23 +18,31 @@ import com.example.dollarfrenzy.Views.ScreenView;
 
 public class Game extends AppCompatActivity {
     private ScreenView screenView;
+    AudioAttributes attrs = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build();
+    final SoundPool sp = new SoundPool.Builder()
+            .setMaxStreams(2)
+            .setAudioAttributes(attrs)
+            .build();
+    boolean[] retMove;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
-        AudioAttributes attrs = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        SoundPool sp = new SoundPool.Builder()
-                .setMaxStreams(2)
-                .setAudioAttributes(attrs)
-                .build();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        final int[] soundIds = new int[2];
+        soundIds[0] = sp.load(getApplicationContext(), R.raw.redrush_eat, 1);
+        soundIds[1] = sp.load(getApplicationContext(), R.raw.redrush_lost, 1);
+
         int size = getIntent().getIntExtra("size",3);
         Board board = new Board(size);
         final Player p = new Player(board,getApplicationContext());
@@ -42,10 +51,14 @@ public class Game extends AppCompatActivity {
         screenView.invalidate();
         screenView.setOnTouchListener(new OnSwipeTouchListener(Game.this) {
             public void onSwipeTop() {
-                if(p.move("UP")){
+                retMove = p.move("UP");
+                if(retMove[0]){
+                    if (retMove[1])
+                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
+                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
                         dialog();
                     }
@@ -55,10 +68,14 @@ public class Game extends AppCompatActivity {
 
             }
             public void onSwipeRight() {
-                if(p.move("RIGHT")){
+                retMove = p.move("RIGHT");
+                if(retMove[0]){
+                    if (retMove[1])
+                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
+                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
                         dialog();
                     }
@@ -68,10 +85,14 @@ public class Game extends AppCompatActivity {
 
             }
             public void onSwipeLeft() {
-                if (p.move("LEFT")){
+                retMove = p.move("LEFT");
+                if(retMove[0]){
+                    if (retMove[1])
+                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
+                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
                         dialog();
                     }
@@ -81,10 +102,14 @@ public class Game extends AppCompatActivity {
 
             }
             public void onSwipeBottom() {
-                if(p.move("DOWN")){
+                retMove = p.move("DOWN");
+                if(retMove[0]){
+                    if (retMove[1])
+                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
+                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
                         dialog();
                     }
@@ -122,5 +147,11 @@ public class Game extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sp.release();
     }
 }

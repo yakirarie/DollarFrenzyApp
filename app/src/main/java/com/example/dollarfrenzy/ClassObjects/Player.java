@@ -40,53 +40,65 @@ public class Player {
         return b.checkBoard();
     }
 
-    public boolean move(String command){
+    public boolean[] move(String command){
         switch (command) {
             case "UP":
                 if (locationY-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return false;
+                    return new boolean[]{false,false};
                 }
                 else{
+                    boolean fruit = false;
+                    if(b.getMatrix()[locationX][locationY-1] == Board.FRUIT)
+                        fruit = true;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationY--;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return true;
+                    return new boolean[]{true,fruit};
                 }
             case "DOWN":
                 if (locationY+1==b.getSize()){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return false;
+                    return new boolean[]{false,false};
                 }
                 else{
+                    boolean fruit = false;
+                    if(b.getMatrix()[locationX][locationY+1] == Board.FRUIT)
+                        fruit = true;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationY++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return true;
+                    return new boolean[]{true,fruit};
                 }
             case "LEFT":
                 if (locationX-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return false;
+                    return new boolean[]{false,false};
                 }
                 else{
+                    boolean fruit = false;
+                    if(b.getMatrix()[locationX-1][locationY] == Board.FRUIT)
+                        fruit = true;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationX--;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return true;
+                    return new boolean[]{true,fruit};
                 }
             case "RIGHT":
                 if (locationX+1==b.getSize()){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return false;
+                    return new boolean[]{false,false};
                 }
                 else{
+                    boolean fruit = false;
+                    if(b.getMatrix()[locationX+1][locationY] == Board.FRUIT)
+                        fruit = true;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationX++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return true;
+                    return new boolean[]{true,fruit};
                 }
         }
-        return false;
+        return new boolean[]{false,false};
     }
 }
