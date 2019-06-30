@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     public void SeekBar(){
         chosenSize = findViewById(R.id.chosenSize);
         seekBar = findViewById(R.id.seekBar);
-        seekBar.onRtlPropertiesChanged(View.LAYOUT_DIRECTION_LTR);
         chosenSize.setText("Board Size: "+(seekBar.getProgress()+3)+"X"+(seekBar.getProgress()+3));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int prog;
