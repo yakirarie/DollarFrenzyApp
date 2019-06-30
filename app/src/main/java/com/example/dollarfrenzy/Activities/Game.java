@@ -2,6 +2,9 @@ package com.example.dollarfrenzy.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +26,14 @@ public class Game extends AppCompatActivity {
         actionBar.hide();
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        SoundPool sp = new SoundPool.Builder()
+                .setMaxStreams(2)
+                .setAudioAttributes(attrs)
+                .build();
         int size = getIntent().getIntExtra("size",3);
         Board board = new Board(size);
         final Player p = new Player(board,getApplicationContext());
@@ -104,4 +115,12 @@ public class Game extends AppCompatActivity {
                 .show();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
 }

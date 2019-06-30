@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -42,6 +43,9 @@ public class ScreenView extends View {
                             break;
                         case Board.PLAYER:
                             mPaint.setColor(Color.GREEN);
+//                            Drawable d = getResources().getDrawable(R.drawable.pixeredrush, null);
+//                            d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+//                            d.draw(canvas);
                             break;
                     }
 
