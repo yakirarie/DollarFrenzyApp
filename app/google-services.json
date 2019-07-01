@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "294012120053",
+    "firebase_url": "https://red-rush.firebaseio.com",
+    "project_id": "red-rush",
+    "storage_bucket": "red-rush.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294012120053:android:bbe6060415338bcb",
+        "android_client_info": {
+          "package_name": "com.example.dollarfrenzy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "294012120053-v3oio4fpe8rva8dqspnsnqmtv13f4gbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dollarfrenzy",
+            "certificate_hash": "a5e56d27dedb3b07c9074667ed7548ff20040af7"
+          }
+        },
+        {
+          "client_id": "294012120053-8q045fv4dsgtdl387bunekj6namai3km.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhdPnGc4UMf_bVlvHYc3IamhOcRAZLrOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "294012120053-8q045fv4dsgtdl387bunekj6namai3km.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

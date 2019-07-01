@@ -4,5 +4,9 @@
     <string name="back">Back to Main Menu</string>
     <string name="explain">Get All The Red Dots Before Half the Stage Is Red!\n- Survival Game -</string>
     <string name="start">start</string>
+    <string name="loading">Loading…</string>
+    <string name="developer">Yakir Arie</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="google_status_fmt">Google User: %s</string>
 
 </resources>

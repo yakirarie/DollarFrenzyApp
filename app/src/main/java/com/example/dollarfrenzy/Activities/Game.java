@@ -1,27 +1,45 @@
 package com.example.dollarfrenzy.Activities;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dollarfrenzy.ClassObjects.Board;
+import com.example.dollarfrenzy.ClassObjects.BoardScore;
 import com.example.dollarfrenzy.ClassObjects.Player;
 import com.example.dollarfrenzy.Listeners.OnSwipeTouchListener;
 import com.example.dollarfrenzy.R;
 import com.example.dollarfrenzy.Views.ScreenView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Game extends AppCompatActivity {
     private ScreenView screenView;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public int size = 0;
+    public BoardScore bs = new BoardScore();
+
     AudioAttributes attrs = new AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -46,11 +64,11 @@ public class Game extends AppCompatActivity {
         final int[] soundIds = new int[2];
         soundIds[0] = sp.load(getApplicationContext(), R.raw.redrush_eat, 1);
         soundIds[1] = sp.load(getApplicationContext(), R.raw.redrush_lost, 1);
-
-        int size = getIntent().getIntExtra("size",3);
+        size = getIntent().getIntExtra("size",3);
         Board board = new Board(size);
         final Player p = new Player(board,getApplicationContext());
         Player.turns = 0;
+        getCurrentScore();
         screenView.setmBoard(p.getB());
         screenView.invalidate();
         screenView.setOnTouchListener(new OnSwipeTouchListener(Game.this) {
@@ -126,15 +144,27 @@ public class Game extends AppCompatActivity {
     }
 
     public void dialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
         View view = getLayoutInflater().inflate(R.layout.dialog,null);
         TextView msg = view.findViewById(R.id.msg);
         Button again = view.findViewById(R.id.again);
         Button back = view.findViewById(R.id.back);
-        msg.setText("Score: "+Player.turns+"\nGood Job!");
+        if (bs.getScore().get(size+"X"+size)>=Player.turns)
+            msg.setText("Score: "+Player.turns+"\nGood Job!");
+        else{
+            msg.setText("Score: "+Player.turns+"\nNew Record!");
+            bs.getScore().put(size+"X"+size,Player.turns);
+            updateDB();
+        }
+
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
         again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 finish();
                 startActivity(getIntent());
             }
@@ -143,13 +173,11 @@ public class Game extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 onBackPressed();
             }
         });
 
-        builder.setView(view);
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     @Override
@@ -165,5 +193,41 @@ public class Game extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         sp.release();
+    }
+    public void getCurrentScore() {
+        final DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getDisplayName());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    if (documentSnapshot.get("Score") != null)
+                        bs.copy((HashMap<String,Integer>) documentSnapshot.get("Score"));
+
+                }
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
+    public void updateDB(){
+        final CollectionReference users = db.collection("Users");
+        Map<String,Map<String,Integer>> data = new HashMap<>();
+        data.put("Score",bs.getScore());
+        users.document("" + mAuth.getCurrentUser().getDisplayName()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error writing document - " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
     }
 }

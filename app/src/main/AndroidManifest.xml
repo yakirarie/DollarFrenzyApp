@@ -11,9 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/noAnimTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <service android:name=".Services.MusicService"
-            android:enabled="true"/>
+        <activity android:name=".Activities.GoogleSignInActivity">
 
+        </activity>
+
+        <service
+            android:name=".Services.MusicService"
+            android:enabled="true" />
         <activity android:name=".Activities.Game" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
@@ -21,6 +25,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
