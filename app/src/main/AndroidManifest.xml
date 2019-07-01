@@ -12,7 +12,11 @@
         android:theme="@style/noAnimTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Activities.GoogleSignInActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service
@@ -20,11 +24,6 @@
             android:enabled="true" />
         <activity android:name=".Activities.Game" />
         <activity android:name=".Activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
     </application>

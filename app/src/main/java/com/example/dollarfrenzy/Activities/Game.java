@@ -38,7 +38,9 @@ public class Game extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public int size = 0;
-    public BoardScore bs = new BoardScore();
+    public BoardScore bs;
+    HashMap<String,Integer> Score = new HashMap<>();
+    AlertDialog dialog;
 
     AudioAttributes attrs = new AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
@@ -58,6 +60,25 @@ public class Game extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.hide();
+        Score.put("3X3",0);
+        Score.put("4X4",0);
+        Score.put("5X5",0);
+        Score.put("6X6",0);
+        Score.put("7X7",0);
+        Score.put("8X8",0);
+        Score.put("9X9",0);
+        Score.put("10X10",0);
+        Score.put("11X11",0);
+        Score.put("12X12",0);
+        Score.put("13X13",0);
+        Score.put("14X14",0);
+        Score.put("15X15",0);
+        Score.put("16X16",0);
+        Score.put("17X17",0);
+        Score.put("18X18",0);
+        Score.put("19X19",0);
+        Score.put("20X20",0);
+        bs = new BoardScore(Score);
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -148,7 +169,7 @@ public class Game extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog,null);
         TextView msg = view.findViewById(R.id.msg);
         Button again = view.findViewById(R.id.again);
-        Button back = view.findViewById(R.id.back);
+        Button back = view.findViewById(R.id.backbtn);
         if (bs.getScore().get(size+"X"+size)>=Player.turns)
             msg.setText("Score: "+Player.turns+"\nGood Job!");
         else{
@@ -158,13 +179,12 @@ public class Game extends AppCompatActivity {
         }
 
         builder.setView(view);
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
 
         again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 finish();
                 startActivity(getIntent());
             }
@@ -173,7 +193,6 @@ public class Game extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 onBackPressed();
             }
         });
@@ -189,6 +208,7 @@ public class Game extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -201,7 +221,7 @@ public class Game extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.get("Score") != null)
-                        bs.copy((HashMap<String,Integer>) documentSnapshot.get("Score"));
+                        bs = new BoardScore(documentSnapshot.toObject(BoardScore.class));
 
                 }
             }
@@ -215,8 +235,8 @@ public class Game extends AppCompatActivity {
 
     public void updateDB(){
         final CollectionReference users = db.collection("Users");
-        Map<String,Map<String,Integer>> data = new HashMap<>();
-        data.put("Score",bs.getScore());
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("ScoreBoard",bs);
         users.document("" + mAuth.getCurrentUser().getDisplayName()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
