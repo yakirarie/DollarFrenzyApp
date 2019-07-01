@@ -10,6 +10,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 import com.example.dollarfrenzy.ClassObjects.Board;
 import com.example.dollarfrenzy.ClassObjects.Player;
 import com.example.dollarfrenzy.Listeners.OnSwipeTouchListener;
@@ -122,22 +126,30 @@ public class Game extends AppCompatActivity {
     }
 
     public void dialog(){
-        new AlertDialog.Builder(this).setCancelable(false)
-                .setTitle("You've Lost!")
-                .setMessage("You've reached a score of "+Player.turns+"! very nice indeed.")
-                .setPositiveButton(getString(R.string.try_again), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        startActivity(getIntent());
-                    }
-                })
-                .setNegativeButton(getString(R.string.back), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        onBackPressed();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
+        View view = getLayoutInflater().inflate(R.layout.dialog,null);
+        TextView msg = view.findViewById(R.id.msg);
+        Button again = view.findViewById(R.id.again);
+        Button back = view.findViewById(R.id.back);
+        msg.setText("Score: "+Player.turns+"\nGood Job!");
+        again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
