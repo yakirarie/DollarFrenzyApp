@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dollarfrenzy.ClassObjects.Board;
-import com.example.dollarfrenzy.ClassObjects.BoardScore;
 import com.example.dollarfrenzy.ClassObjects.Player;
 import com.example.dollarfrenzy.Listeners.OnSwipeTouchListener;
 import com.example.dollarfrenzy.R;
@@ -25,7 +24,6 @@ import com.example.dollarfrenzy.Views.ScreenView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,8 +36,7 @@ public class Game extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public int size = 0;
-    public BoardScore bs;
-    HashMap<String,Integer> Score = new HashMap<>();
+    Map<String,Object> Score = new HashMap<>();
     AlertDialog dialog;
 
     AudioAttributes attrs = new AudioAttributes.Builder()
@@ -78,7 +75,6 @@ public class Game extends AppCompatActivity {
         Score.put("18X18",0);
         Score.put("19X19",0);
         Score.put("20X20",0);
-        bs = new BoardScore(Score);
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -170,21 +166,23 @@ public class Game extends AppCompatActivity {
         TextView msg = view.findViewById(R.id.msg);
         Button again = view.findViewById(R.id.again);
         Button back = view.findViewById(R.id.backbtn);
-        if (bs.getScore().get(size+"X"+size)>=Player.turns)
+        if ((long)Score.get(size+"X"+size)>=Player.turns)
             msg.setText("Score: "+Player.turns+"\nGood Job!");
         else{
             msg.setText("Score: "+Player.turns+"\nNew Record!");
-            bs.getScore().put(size+"X"+size,Player.turns);
+            Score.put(size+"X"+size,Player.turns);
             updateDB();
         }
 
         builder.setView(view);
         dialog = builder.create();
+        dialog.setCancelable(false);
         dialog.show();
 
         again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 finish();
                 startActivity(getIntent());
             }
@@ -193,6 +191,7 @@ public class Game extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 onBackPressed();
             }
         });
@@ -220,10 +219,17 @@ public class Game extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    if (documentSnapshot.get("Score") != null)
-                        bs = new BoardScore(documentSnapshot.toObject(BoardScore.class));
+                    if(documentSnapshot!=null)
+                        Score = documentSnapshot.getData();
+                    else
+                        Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
 
                 }
+                else{
+                        Toast.makeText(getApplicationContext(),"hara",Toast.LENGTH_LONG).show();
+
+                }
+
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -234,10 +240,8 @@ public class Game extends AppCompatActivity {
     }
 
     public void updateDB(){
-        final CollectionReference users = db.collection("Users");
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("ScoreBoard",bs);
-        users.document("" + mAuth.getCurrentUser().getDisplayName()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+        final DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getDisplayName());
+        docRef.set(Score).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
             }

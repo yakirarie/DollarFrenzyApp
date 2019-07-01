@@ -10,18 +10,33 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="233dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="125dp"
+        android:layout_width="219dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="13dp"
         android:background="#2196F3"
         android:lineSpacingExtra="18sp"
         android:onClick="start"
         android:text="@string/start"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chosenSize" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="222dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="69dp"
+        android:background="#2196F3"
+        android:lineSpacingExtra="18sp"
+        android:onClick="watchScores"
+        android:text="@string/highscores"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -36,10 +51,10 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="347dp"
-        android:layout_height="89dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginEnd="41dp"
+        android:layout_width="325dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="11dp"
         android:fontFamily="sans-serif-condensed"
         android:text="@string/explain"
@@ -55,8 +70,10 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="275dp"
-        android:layout_height="40dp"
+        android:layout_width="280dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginEnd="68dp"
         android:layout_marginBottom="10dp"
         android:max="17"
         app:layout_constraintBottom_toTopOf="@+id/chosenSize"
@@ -66,8 +83,8 @@
 
     <TextView
         android:id="@+id/chosenSize"
-        android:layout_width="226dp"
-        android:layout_height="49dp"
+        android:layout_width="249dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="27dp"
         android:text="TextView"
         android:textAlignment="center"
