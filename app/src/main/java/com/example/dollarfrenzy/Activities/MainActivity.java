@@ -106,10 +106,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
 
                 }
-                else{
-                    Toast.makeText(getApplicationContext(),"hara",Toast.LENGTH_LONG).show();
 
-                }
+
 
             }
 
@@ -127,18 +125,12 @@ public class MainActivity extends AppCompatActivity {
         msg.setMovementMethod(new ScrollingMovementMethod());
         TextView title = mView.findViewById(R.id.title);
         String head = title.getText().toString();
-        title.setText((mAuth.getCurrentUser().getDisplayName())+" "+head);
-        if (scores==null)
-            msg.setText("no high scores yet");
-        else{
-            long[] scoreArray = sortScores();
-            String fill = "";
-            for (int i=0;i<scoreArray.length;i++){
-                fill += (i+3)+"X"+(i+3)+" - "+scoreArray[i]+"\n";
-            }
-            msg.setText(fill);
-
-        }
+        title.setText((mAuth.getCurrentUser().getDisplayName())+"\n"+head);
+        long[] scoreArray = sortScores();
+        String fill = "";
+        for (int i=0;i<scoreArray.length;i++)
+            fill += (i+3)+"X"+(i+3)+" - "+scoreArray[i]+"\n";
+        msg.setText(fill);
         builder.setView(mView);
         dialog = builder.create();
         dialog.show();
@@ -242,12 +234,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public long[] sortScores(){
-        long[] scoresArray = new long[17];
+        long[] scoresArray = new long[18];
         if(scores!=null) {
             for (String s : scores.keySet()) {
-//                scoresArray[ Character.getNumericValue(s.charAt(0)) - 3] = (long) scores.get(s);
-                Toast.makeText(getApplicationContext(), s.charAt(0) + "", Toast.LENGTH_LONG).show();
+                  int index = Integer.parseInt(s.split("X")[0]);
+                  scoresArray[index - 3] = (long) scores.get(s);
             }
+
+
         }
         return scoresArray;
     }

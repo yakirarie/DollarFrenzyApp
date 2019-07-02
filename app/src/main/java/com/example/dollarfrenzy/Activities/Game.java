@@ -166,13 +166,26 @@ public class Game extends AppCompatActivity {
         TextView msg = view.findViewById(R.id.msg);
         Button again = view.findViewById(R.id.again);
         Button back = view.findViewById(R.id.backbtn);
-        if ((long)Score.get(size+"X"+size)>=Player.turns)
-            msg.setText("Score: "+Player.turns+"\nGood Job!");
-        else{
-            msg.setText("Score: "+Player.turns+"\nNew Record!");
-            Score.put(size+"X"+size,Player.turns);
-            updateDB();
+        if (Score.get(size+"X"+size) instanceof  Integer){
+            if (((Integer)Score.get(size+"X"+size)).intValue()>=Player.turns)
+                msg.setText("Score: "+Player.turns+"\nGood Job!");
+            else{
+                msg.setText("Score: "+Player.turns+"\nNew Record!");
+                Score.put(size+"X"+size,Player.turns);
+                updateDB();
+            }
         }
+        else{
+            if (((Long)Score.get(size+"X"+size)).intValue()>=Player.turns)
+                msg.setText("Score: "+Player.turns+"\nGood Job!");
+            else{
+                msg.setText("Score: "+Player.turns+"\nNew Record!");
+                Score.put(size+"X"+size,Player.turns);
+                updateDB();
+            }
+
+        }
+
 
         builder.setView(view);
         dialog = builder.create();
@@ -223,10 +236,6 @@ public class Game extends AppCompatActivity {
                         Score = documentSnapshot.getData();
                     else
                         Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
-
-                }
-                else{
-                        Toast.makeText(getApplicationContext(),"hara",Toast.LENGTH_LONG).show();
 
                 }
 
