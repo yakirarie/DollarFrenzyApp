@@ -2,6 +2,7 @@ package com.example.dollarfrenzy.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +46,7 @@ public class Game extends AppCompatActivity {
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .build();
     final SoundPool sp = new SoundPool.Builder()
-            .setMaxStreams(2)
+            .setMaxStreams(3)
             .setAudioAttributes(attrs)
             .build();
     boolean[] retMove;
@@ -78,9 +80,10 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        final int[] soundIds = new int[2];
+        final int[] soundIds = new int[3];
         soundIds[0] = sp.load(getApplicationContext(), R.raw.redrush_eat, 1);
         soundIds[1] = sp.load(getApplicationContext(), R.raw.redrush_lost, 1);
+        soundIds[2] = sp.load(getApplicationContext(), R.raw.redrush_newscore, 1);
         size = getIntent().getIntExtra("size",3);
         Board board = new Board(size);
         final Player p = new Player(board,getApplicationContext());
@@ -97,9 +100,11 @@ public class Game extends AppCompatActivity {
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
-                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
-                        dialog();
+                        if(dialog())
+                            sp.play(soundIds[2], 1, 1, 1, 0, 1);
+                        else
+                            sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
@@ -114,9 +119,11 @@ public class Game extends AppCompatActivity {
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
-                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
-                        dialog();
+                        if(dialog())
+                            sp.play(soundIds[2], 1, 1, 1, 0, 1);
+                        else
+                            sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
@@ -131,9 +138,11 @@ public class Game extends AppCompatActivity {
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
-                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
-                        dialog();
+                        if(dialog())
+                            sp.play(soundIds[2], 1, 1, 1, 0, 1);
+                        else
+                            sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
@@ -148,9 +157,11 @@ public class Game extends AppCompatActivity {
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()){
-                        sp.play(soundIds[1], 1, 1, 1, 0, 1);
                         screenView.setOnTouchListener(null);
-                        dialog();
+                        if(dialog())
+                            sp.play(soundIds[2], 1, 1, 1, 0, 1);
+                        else
+                            sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
@@ -160,10 +171,12 @@ public class Game extends AppCompatActivity {
         });
     }
 
-    public void dialog(){
+    public boolean dialog(){
+        boolean isHighScore = false;
         final AlertDialog.Builder builder = new AlertDialog.Builder(Game.this);
         View view = getLayoutInflater().inflate(R.layout.dialog,null);
         TextView msg = view.findViewById(R.id.msg);
+        ImageView star = view.findViewById(R.id.star);
         Button again = view.findViewById(R.id.again);
         Button back = view.findViewById(R.id.backbtn);
         if (Score.get(size+"X"+size) instanceof  Integer){
@@ -171,7 +184,9 @@ public class Game extends AppCompatActivity {
                 msg.setText("Score: "+Player.turns+"\nGood Job!");
             else{
                 msg.setText("Score: "+Player.turns+"\nNew Record!");
+                star.setVisibility(View.VISIBLE);
                 Score.put(size+"X"+size,Player.turns);
+                isHighScore = true;
                 updateDB();
             }
         }
@@ -180,7 +195,9 @@ public class Game extends AppCompatActivity {
                 msg.setText("Score: "+Player.turns+"\nGood Job!");
             else{
                 msg.setText("Score: "+Player.turns+"\nNew Record!");
+                star.setVisibility(View.VISIBLE);
                 Score.put(size+"X"+size,Player.turns);
+                isHighScore = true;
                 updateDB();
             }
 
@@ -208,6 +225,8 @@ public class Game extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        return isHighScore;
 
     }
 
