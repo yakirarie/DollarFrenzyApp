@@ -138,6 +138,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void info(View view){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.info,null);
+        builder.setView(mView);
+        dialog = builder.create();
+        dialog.show();
+    }
+
     public void SeekBar(){
         chosenSize = findViewById(R.id.chosenSize);
         seekBar = findViewById(R.id.seekBar);
