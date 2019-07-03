@@ -36,7 +36,7 @@ public class Player {
         return b;
     }
 
-    public boolean checkBoard(){
+    public int checkBoard(){
         return b.checkBoard();
     }
 

@@ -99,13 +99,16 @@ public class Game extends AppCompatActivity {
                         sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
-                    if (p.checkBoard()){
+                    if (p.checkBoard()==1){
+                        screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
                         if(dialog())
                             sp.play(soundIds[2], 1, 1, 1, 0, 1);
                         else
                             sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
+                    else if (p.checkBoard()==0)
+                        screenView.imageNum = 0;
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
                 }
@@ -118,13 +121,16 @@ public class Game extends AppCompatActivity {
                         sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
-                    if (p.checkBoard()){
+                    if (p.checkBoard()==1){
+                        screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
                         if(dialog())
                             sp.play(soundIds[2], 1, 1, 1, 0, 1);
                         else
                             sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
+                    else if (p.checkBoard()==0)
+                        screenView.imageNum = 0;
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
                 }
@@ -137,13 +143,16 @@ public class Game extends AppCompatActivity {
                         sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
-                    if (p.checkBoard()){
+                    if (p.checkBoard()==1){
+                        screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
                         if(dialog())
                             sp.play(soundIds[2], 1, 1, 1, 0, 1);
                         else
                             sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
+                    else if (p.checkBoard()==0)
+                        screenView.imageNum = 0;
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
                 }
@@ -156,13 +165,16 @@ public class Game extends AppCompatActivity {
                         sp.play(soundIds[0], 1, 1, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
-                    if (p.checkBoard()){
+                    if (p.checkBoard()==1){
+                        screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
                         if(dialog())
                             sp.play(soundIds[2], 1, 1, 1, 0, 1);
                         else
                             sp.play(soundIds[1], 1, 1, 1, 0, 1);
                     }
+                    else if (p.checkBoard()==0)
+                        screenView.imageNum = 0;
                     screenView.setmBoard(p.getB());
                     screenView.invalidate();
                 }

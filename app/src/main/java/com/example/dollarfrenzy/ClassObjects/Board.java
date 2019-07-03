@@ -46,7 +46,7 @@ public class Board {
         matrix[x][y] = FRUIT;
     }
 
-    boolean checkBoard(){
+    public int checkBoard(){
         int num_of_fruit = 0;
         for(int i =0;i<size;i++){
             for(int j = 0;j<size ;j++){
@@ -54,7 +54,11 @@ public class Board {
                     num_of_fruit++;
             }
         }
-        return num_of_fruit>=size*size*0.5;
+        if(num_of_fruit>=size*size*0.5)
+            return 1;
+        if(num_of_fruit>=size*size*0.4)
+            return 0;
+        return -1;
     }
 
 }

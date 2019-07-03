@@ -12,9 +12,8 @@ import com.example.dollarfrenzy.ClassObjects.Board;
 import com.example.dollarfrenzy.R;
 
 public class ScreenView extends View {
-//    private Paint mPaint = new Paint();
     private Board mBoard;
-
+    public int imageNum = -1;
     public ScreenView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
@@ -32,23 +31,40 @@ public class ScreenView extends View {
         if(mBoard != null){
             float tileSizeX = (float)getWidth()/mBoard.getSize();
             float tileSizeY = (float)getHeight()/mBoard.getSize();
-//            float circleSize = Math.min(tileSizeX,tileSizeY)/2;
             for(int i=0 ;i<mBoard.getSize();i++){
                 for(int j=0;j<mBoard.getSize();j++){
                     switch (mBoard.getMatrix()[i][j]){
                         case Board.FRUIT:
-                            d = getResources().getDrawable(R.drawable.red, null);
-                            d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
-                            d.draw(canvas);
+                            if (imageNum == -1 || imageNum == 0){
+                                d = getResources().getDrawable(R.drawable.red, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                            }
+                            else{
+                                d = getResources().getDrawable(R.drawable.red_happy, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                            }
                             break;
                         case Board.PLAYER:
-                            d = getResources().getDrawable(R.drawable.green, null);
-                            d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
-                            d.draw(canvas);
+                            if (imageNum == -1){
+                                d = getResources().getDrawable(R.drawable.green, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                            }
+                            else if (imageNum == 0){
+                                d = getResources().getDrawable(R.drawable.green_worried, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                            }
+                            else{
+                                d = getResources().getDrawable(R.drawable.green_lost, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                            }
                             break;
                     }
 
-//                    canvas.drawCircle(i*tileSizeX+tileSizeX/2f , j*tileSizeY+tileSizeY/2f,circleSize,mPaint);
                 }
             }
 
