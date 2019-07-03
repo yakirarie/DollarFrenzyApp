@@ -27,12 +27,11 @@
     <ImageView
         android:id="@+id/star"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="255dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:src="@drawable/star"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/again"
