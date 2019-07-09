@@ -48,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     Map<String,Object> scores = new HashMap<>();
+    Map<String,Object> world = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getCurrentScore();
+        getWorldScore();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         //BIND Music Service
@@ -118,6 +120,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getWorldScore() {
+        final DocumentReference docRef = db.collection("Users").document("Top");
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    if(documentSnapshot!=null) {
+                        world = documentSnapshot.getData();
+
+                    }
+                    else
+                        Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
+
+                }
+
+
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
     public void watchScores(View view){
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.high_scores,null);
@@ -127,6 +155,23 @@ public class MainActivity extends AppCompatActivity {
         String head = title.getText().toString();
         title.setText((mAuth.getCurrentUser().getDisplayName())+"\n"+head);
         long[] scoreArray = sortScores();
+        String fill = "";
+        for (int i=0;i<scoreArray.length;i++)
+            fill += (i+3)+"X"+(i+3)+" - "+scoreArray[i]+"\n";
+        msg.setText(fill);
+        builder.setView(mView);
+        dialog = builder.create();
+        dialog.show();
+
+
+    }
+
+    public void watchWorld(View view){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.world_scores,null);
+        TextView msg = mView.findViewById(R.id.msg);
+        msg.setMovementMethod(new ScrollingMovementMethod());
+        String[] scoreArray = sortWorld();
         String fill = "";
         for (int i=0;i<scoreArray.length;i++)
             fill += (i+3)+"X"+(i+3)+" - "+scoreArray[i]+"\n";
@@ -247,6 +292,19 @@ public class MainActivity extends AppCompatActivity {
             for (String s : scores.keySet()) {
                   int index = Integer.parseInt(s.split("X")[0]);
                   scoresArray[index - 3] = (long) scores.get(s);
+            }
+
+
+        }
+        return scoresArray;
+    }
+
+    public String[] sortWorld(){
+        String[] scoresArray = new String[18];
+        if(world!=null) {
+            for (String s : world.keySet()) {
+                int index = Integer.parseInt(s.split("X")[0]);
+                scoresArray[index - 3] = (String) world.get(s);
             }
 
 

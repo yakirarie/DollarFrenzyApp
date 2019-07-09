@@ -25,9 +25,17 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/star"
+        android:id="@+id/starBig"
         android:layout_width="match_parent"
         android:layout_height="255dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:src="@drawable/star"
+        android:visibility="gone" />
+    <ImageView
+        android:id="@+id/starSmall"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:src="@drawable/star"
