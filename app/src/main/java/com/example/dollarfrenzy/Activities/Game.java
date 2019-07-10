@@ -308,7 +308,7 @@ public class Game extends AppCompatActivity {
 
     public void updateDB(){
         final DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getDisplayName());
-        docRef.set(Score).addOnSuccessListener(new OnSuccessListener<Void>() {
+        docRef.update(size+"X"+size,Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
             }
@@ -324,7 +324,7 @@ public class Game extends AppCompatActivity {
 
     public void updateWorld(){
         final DocumentReference docRef = db.collection("Users").document("Top");
-        docRef.set(World).addOnSuccessListener(new OnSuccessListener<Void>() {
+        docRef.update(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
             }
