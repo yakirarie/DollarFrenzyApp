@@ -2,7 +2,7 @@ package com.example.dollarfrenzy.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +32,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Game extends AppCompatActivity {
     private ScreenView screenView;
@@ -41,7 +44,7 @@ public class Game extends AppCompatActivity {
     Map<String,Object> Score = new HashMap<>();
     Map<String,Object> World = new HashMap<>();
     AlertDialog dialog;
-
+    SharedPreferences sharedPreferences;
     AudioAttributes attrs = new AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -51,7 +54,8 @@ public class Game extends AppCompatActivity {
             .setAudioAttributes(attrs)
             .build();
     boolean[] retMove;
-
+    boolean sound;
+    int volume;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -60,6 +64,14 @@ public class Game extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.hide();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sound = sharedPreferences.getBoolean("sound",true);
+        if (sound){
+            volume = 1;
+        }
+        else
+            volume = 0;
         initScore();
         initWorld();
         setContentView(R.layout.activity_game);
@@ -83,13 +95,13 @@ public class Game extends AppCompatActivity {
                 retMove = p.move("UP");
                 if(retMove[0]){
                     if (retMove[1])
-                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[0], volume, volume, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
-                        sp.play(soundIds[dialog()], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[dialog()], volume, volume, 1, 0, 1);
                     }
                     else if (p.checkBoard()==0)
                         screenView.imageNum = 0;
@@ -102,13 +114,13 @@ public class Game extends AppCompatActivity {
                 retMove = p.move("RIGHT");
                 if(retMove[0]){
                     if (retMove[1])
-                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[0], volume, volume, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
-                        sp.play(soundIds[dialog()], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[dialog()], volume, volume, 1, 0, 1);
                     }
                     else if (p.checkBoard()==0)
                         screenView.imageNum = 0;
@@ -121,13 +133,13 @@ public class Game extends AppCompatActivity {
                 retMove = p.move("LEFT");
                 if(retMove[0]){
                     if (retMove[1])
-                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[0], volume, volume, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
-                        sp.play(soundIds[dialog()], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[dialog()], volume, volume, 1, 0, 1);
                     }
                     else if (p.checkBoard()==0)
                         screenView.imageNum = 0;
@@ -140,13 +152,13 @@ public class Game extends AppCompatActivity {
                 retMove = p.move("DOWN");
                 if(retMove[0]){
                     if (retMove[1])
-                        sp.play(soundIds[0], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[0], volume, volume, 1, 0, 1);
                     p.getB().addFruit();
                     Player.turns++;
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
-                        sp.play(soundIds[dialog()], 1, 1, 1, 0, 1);
+                        sp.play(soundIds[dialog()], volume, volume, 1, 0, 1);
                     }
                     else if (p.checkBoard()==0)
                         screenView.imageNum = 0;
@@ -268,8 +280,15 @@ public class Game extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    if(documentSnapshot!=null)
+                    if(documentSnapshot!=null){
                         Score = documentSnapshot.getData();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Set<String> valueSet =  new HashSet<>();
+                        for (String s : Score.keySet())
+                            valueSet.add(s+"-"+Score.get(s));
+                        editor.putStringSet("score",valueSet);
+                        editor.apply();
+                    }
                     else
                         Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
 
@@ -290,8 +309,17 @@ public class Game extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    if(documentSnapshot!=null)
+                    if(documentSnapshot!=null){
                         World = documentSnapshot.getData();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Set<String> valueSet =  new HashSet<>();
+                        for (String s : World.keySet())
+                            valueSet.add(s+"-"+World.get(s));
+
+                        editor.putStringSet("world",valueSet);
+                        editor.apply();
+                    }
+
                     else
                         Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
 
@@ -311,6 +339,12 @@ public class Game extends AppCompatActivity {
         docRef.update(size+"X"+size,Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Set<String> valueSet =  new HashSet<>();
+                for (String s : Score.keySet())
+                    valueSet.add(s+"-"+Score.get(s));
+                editor.putStringSet("score",valueSet);
+                editor.apply();
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -327,6 +361,12 @@ public class Game extends AppCompatActivity {
         docRef.update(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Set<String> valueSet =  new HashSet<>();
+                for (String s : World.keySet())
+                    valueSet.add(s+"-"+World.get(s));
+                editor.putStringSet("world",valueSet);
+                editor.apply();
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -339,44 +379,23 @@ public class Game extends AppCompatActivity {
     }
 
     public void initScore(){
-        Score.put("3X3",0);
-        Score.put("4X4",0);
-        Score.put("5X5",0);
-        Score.put("6X6",0);
-        Score.put("7X7",0);
-        Score.put("8X8",0);
-        Score.put("9X9",0);
-        Score.put("10X10",0);
-        Score.put("11X11",0);
-        Score.put("12X12",0);
-        Score.put("13X13",0);
-        Score.put("14X14",0);
-        Score.put("15X15",0);
-        Score.put("16X16",0);
-        Score.put("17X17",0);
-        Score.put("18X18",0);
-        Score.put("19X19",0);
-        Score.put("20X20",0);
+
+        Set<String> valuesSet = sharedPreferences.getStringSet("score",new HashSet<String>());
+        for (String s : valuesSet) {
+            String board = s.split("-")[0];
+            long value = Long.parseLong(s.split("-")[1]);
+            int index = Integer.parseInt(board.split("X")[0]);
+            Score.put((index-3)+"X"+(index-3),value);
+        }
     }
 
     public void initWorld(){
-        World.put("3X3","null 0");
-        World.put("4X4","null 0");
-        World.put("5X5","null 0");
-        World.put("6X6","null 0");
-        World.put("7X7","null 0");
-        World.put("8X8","null 0");
-        World.put("9X9","null 0");
-        World.put("10X10","null 0");
-        World.put("11X11","null 0");
-        World.put("12X12","null 0");
-        World.put("13X13","null 0");
-        World.put("14X14","null 0");
-        World.put("15X15","null 0");
-        World.put("16X16","null 0");
-        World.put("17X17","null 0");
-        World.put("18X18","null 0");
-        World.put("19X19","null 0");
-        World.put("20X20","null 0");
+        Set<String> valuesSet = sharedPreferences.getStringSet("world",new HashSet<String>());
+        for (String s : valuesSet) {
+            String board = s.split("-")[0];
+            String name = s.split("-")[1];
+            int index = Integer.parseInt(board.split("X")[0]);
+            World.put((index-3)+"X"+(index-3),name);
+        }
     }
 }

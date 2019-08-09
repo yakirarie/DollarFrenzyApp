@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 
@@ -12,9 +14,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,9 +41,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     TextView chosenSize;
@@ -50,19 +58,34 @@ public class MainActivity extends AppCompatActivity {
     Map<String,Object> scores = new HashMap<>();
     Map<String,Object> world = new HashMap<>();
 
+    SharedPreferences sharedPreferences;
+    boolean sound;
+    ImageButton soundButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         getCurrentScore();
         getWorldScore();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sound = sharedPreferences.getBoolean("sound",true);
+        soundButton = findViewById(R.id.imageButton);
+        if (sound)
+            soundButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+        else
+            soundButton.setImageResource(android.R.drawable.ic_lock_silent_mode);
+
         //BIND Music Service
         doBindService();
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
-        startService(music);
+        if (sound)
+            startService(music);
         //Start HomeWatcher
         mHomeWatcher = new HomeWatcher(this);
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
@@ -100,12 +123,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    if(documentSnapshot!=null) {
-                        scores = documentSnapshot.getData();
-
-                    }
-                    else
-                        Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
+                    scores = documentSnapshot.getData();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    Set<String> valueSet =  new HashSet<>();
+                    for (String s : scores.keySet())
+                        valueSet.add(s+"-"+scores.get(s));
+                    editor.putStringSet("score",valueSet);
+                    editor.apply();
 
                 }
 
@@ -126,13 +150,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    if(documentSnapshot!=null) {
-                        world = documentSnapshot.getData();
-
-                    }
-                    else
-                        Toast.makeText(getApplicationContext(),"null",Toast.LENGTH_LONG).show();
-
+                    world = documentSnapshot.getData();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    Set<String> valueSet =  new HashSet<>();
+                    for (String s : world.keySet())
+                        valueSet.add(s+"-"+world.get(s));
+                    editor.putStringSet("world",valueSet);
+                    editor.apply();
                 }
 
 
@@ -215,6 +239,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public void soundOnOff(View view){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sound = !sound;
+        editor.putBoolean("sound",sound);
+        editor.apply();
+        if (sound){
+            soundButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+            mServ.startMusic();
+
+        }
+
+        else{
+            soundButton.setImageResource(android.R.drawable.ic_lock_silent_mode);
+            mServ.stopMusic();
+        }
+
+
+    }
     //Bind/Unbind music service
     private boolean mIsBound = false;
     private MusicService mServ;
@@ -249,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (mServ != null) {
+        if (mServ != null && sound) {
             mServ.resumeMusic();
         }
     }
@@ -266,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             isScreenOn = pm.isInteractive();
         }
 
-        if (!isScreenOn) {
+        if (!isScreenOn && sound) {
             if (mServ != null) {
                 mServ.pauseMusic();
             }
@@ -288,26 +331,24 @@ public class MainActivity extends AppCompatActivity {
 
     public long[] sortScores(){
         long[] scoresArray = new long[18];
-        if(scores!=null) {
-            for (String s : scores.keySet()) {
-                  int index = Integer.parseInt(s.split("X")[0]);
-                  scoresArray[index - 3] = (long) scores.get(s);
-            }
-
-
+        Set<String> valuesSet = sharedPreferences.getStringSet("score",new HashSet<String>());
+        for (String s : valuesSet) {
+            String board = s.split("-")[0];
+            long value = Long.parseLong(s.split("-")[1]);
+            int index = Integer.parseInt(board.split("X")[0]);
+            scoresArray[index-3] = value;
         }
         return scoresArray;
     }
 
     public String[] sortWorld(){
         String[] scoresArray = new String[18];
-        if(world!=null) {
-            for (String s : world.keySet()) {
-                int index = Integer.parseInt(s.split("X")[0]);
-                scoresArray[index - 3] = (String) world.get(s);
-            }
-
-
+        Set<String> valuesSet = sharedPreferences.getStringSet("world",new HashSet<String>());
+        for (String s : valuesSet) {
+            String board = s.split("-")[0];
+            String name = s.split("-")[1];
+            int index = Integer.parseInt(board.split("X")[0]);
+            scoresArray[index-3] = name;
         }
         return scoresArray;
     }

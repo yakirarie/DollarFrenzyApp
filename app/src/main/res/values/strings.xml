@@ -11,5 +11,6 @@
     <string name="highscores">High Scores</string>
     <string name="about">This game was developed by me,\n Yakir Arie,\n a graduated computer science student.\n Hope you enjoy playing it as much as I enjoyed making it!</string>
     <string name="world">World Top</string>
+    <string name="preference_file_key">sharedPref</string>
 
 </resources>
