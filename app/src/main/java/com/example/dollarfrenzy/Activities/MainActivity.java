@@ -18,6 +18,7 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     Map<String,Object> scores = new HashMap<>();
     Map<String,Object> world = new HashMap<>();
-
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
     SharedPreferences sharedPreferences;
     boolean sound;
     ImageButton soundButton;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_menu);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         getCurrentScore();
         getWorldScore();
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void start(View view){
+        view.startAnimation(buttonClick);
         int size = seekBar.getProgress()+3;
         Intent intent = new Intent(getApplicationContext(),Game.class);
         intent.putExtra("size",size);
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void watchScores(View view){
+        view.startAnimation(buttonClick);
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.high_scores,null);
         TextView msg = mView.findViewById(R.id.msg);
@@ -191,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void watchWorld(View view){
+        view.startAnimation(buttonClick);
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.world_scores,null);
         TextView msg = mView.findViewById(R.id.msg);
@@ -208,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void info(View view){
+        view.startAnimation(buttonClick);
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.info,null);
         builder.setView(mView);
@@ -241,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void soundOnOff(View view){
+        view.startAnimation(buttonClick);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         sound = !sound;
         editor.putBoolean("sound",sound);
