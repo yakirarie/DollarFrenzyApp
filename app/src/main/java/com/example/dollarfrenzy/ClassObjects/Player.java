@@ -12,7 +12,7 @@ public class Player {
     private int locationY;
     private Board b;
     private Context context;
-    public static int turns = 0;
+    public static int playerScore = 0;
 
     public Player(Board b, Context context){
         this.context = context;
@@ -40,65 +40,73 @@ public class Player {
         return b.checkBoard();
     }
 
-    public boolean[] move(String command){
+    public int[] move(String command){
         switch (command) {
             case "UP":
                 if (locationY-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return new boolean[]{false,false};
+                    return new int[]{0,0};
                 }
                 else{
-                    boolean fruit = false;
+                    int fruit = 0;
                     if(b.getMatrix()[locationX][locationY-1] == Board.FRUIT)
-                        fruit = true;
+                        fruit = 1;
+                    else if (b.getMatrix()[locationX][locationY-1] == Board.FRUIT3)
+                        fruit = 2;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationY--;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return new boolean[]{true,fruit};
+                    return new int[]{1,fruit};
                 }
             case "DOWN":
                 if (locationY+1==b.getSize()){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return new boolean[]{false,false};
+                    return new int[]{0,0};
                 }
                 else{
-                    boolean fruit = false;
-                    if(b.getMatrix()[locationX][locationY+1] == Board.FRUIT)
-                        fruit = true;
+                    int fruit = 0;
+                    if(b.getMatrix()[locationX][locationY+1] == Board.FRUIT )
+                        fruit = 1;
+                    else if ( b.getMatrix()[locationX][locationY+1] == Board.FRUIT3)
+                        fruit = 2;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationY++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return new boolean[]{true,fruit};
+                    return new int[]{1,fruit};
                 }
             case "LEFT":
                 if (locationX-1<0){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return new boolean[]{false,false};
+                    return new int[]{0,0};
                 }
                 else{
-                    boolean fruit = false;
-                    if(b.getMatrix()[locationX-1][locationY] == Board.FRUIT)
-                        fruit = true;
+                    int fruit = 0;
+                    if(b.getMatrix()[locationX-1][locationY] == Board.FRUIT )
+                        fruit = 1;
+                    else if (b.getMatrix()[locationX-1][locationY] == Board.FRUIT3)
+                        fruit = 2;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationX--;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return new boolean[]{true,fruit};
+                    return new int[]{1,fruit};
                 }
             case "RIGHT":
                 if (locationX+1==b.getSize()){
                     Toast.makeText(context,"You cant move there!",Toast.LENGTH_LONG).show();
-                    return new boolean[]{false,false};
+                    return new int[]{0,0};
                 }
                 else{
-                    boolean fruit = false;
+                    int fruit = 0;
                     if(b.getMatrix()[locationX+1][locationY] == Board.FRUIT)
-                        fruit = true;
+                        fruit = 1;
+                    else if (b.getMatrix()[locationX+1][locationY] == Board.FRUIT3)
+                        fruit = 2;
                     b.getMatrix()[locationX][locationY] = Board.EMPTY;
                     locationX++;
                     b.getMatrix()[locationX][locationY] = Board.PLAYER;
-                    return new boolean[]{true,fruit};
+                    return new int[]{1,fruit};
                 }
         }
-        return new boolean[]{false,false};
+        return new int[]{0,0};
     }
 }

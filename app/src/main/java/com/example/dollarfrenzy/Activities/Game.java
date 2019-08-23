@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class Game extends AppCompatActivity {
@@ -53,9 +54,10 @@ public class Game extends AppCompatActivity {
             .setMaxStreams(4)
             .setAudioAttributes(attrs)
             .build();
-    boolean[] retMove;
+    int[] retMove;
     boolean sound;
     int volume;
+    Random r = new Random();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -77,15 +79,16 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         screenView = findViewById(R.id.screenView);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        final int[] soundIds = new int[4];
+        final int[] soundIds = new int[5];
         soundIds[0] = sp.load(getApplicationContext(), R.raw.redrush_eat, 1);
         soundIds[1] = sp.load(getApplicationContext(), R.raw.redrush_lost, 1);
         soundIds[2] = sp.load(getApplicationContext(), R.raw.redrush_newscore, 1);
         soundIds[3] = sp.load(getApplicationContext(), R.raw.redrush_worldscore, 1);
+        soundIds[4] = sp.load(getApplicationContext(), R.raw.redrush_golden, 1);
         size = getIntent().getIntExtra("size",3);
         Board board = new Board(size);
         final Player p = new Player(board,getApplicationContext());
-        Player.turns = 0;
+        Player.playerScore = 0;
         getCurrentScore();
         getWorldScore();
         screenView.setmBoard(p.getB());
@@ -93,11 +96,19 @@ public class Game extends AppCompatActivity {
         screenView.setOnTouchListener(new OnSwipeTouchListener(Game.this) {
             public void onSwipeTop() {
                 retMove = p.move("UP");
-                if(retMove[0]){
-                    if (retMove[1])
+                if(retMove[0]==1){
+                    if (retMove[1]==1){
                         sp.play(soundIds[0], volume, volume, 1, 0, 1);
-                    p.getB().addFruit();
-                    Player.turns++;
+                        Player.playerScore++;
+                    }
+                    else if (retMove[1]==2){
+                        sp.play(soundIds[4], volume, volume, 1, 0, 1);
+                        Player.playerScore+=3;
+                    }
+                    if (r.nextInt(10)<=2)
+                        p.getB().add5Fruit();
+                    else
+                        p.getB().addFruit();
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
@@ -112,11 +123,19 @@ public class Game extends AppCompatActivity {
             }
             public void onSwipeRight() {
                 retMove = p.move("RIGHT");
-                if(retMove[0]){
-                    if (retMove[1])
+                if(retMove[0]==1){
+                    if (retMove[1]==1){
                         sp.play(soundIds[0], volume, volume, 1, 0, 1);
-                    p.getB().addFruit();
-                    Player.turns++;
+                        Player.playerScore++;
+                    }
+                    else if (retMove[1]==2){
+                        sp.play(soundIds[4], volume, volume, 1, 0, 1);
+                        Player.playerScore+=3;
+                    }
+                    if (r.nextInt(10)<=2)
+                        p.getB().add5Fruit();
+                    else
+                        p.getB().addFruit();
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
@@ -131,11 +150,19 @@ public class Game extends AppCompatActivity {
             }
             public void onSwipeLeft() {
                 retMove = p.move("LEFT");
-                if(retMove[0]){
-                    if (retMove[1])
+                if(retMove[0]==1){
+                    if (retMove[1]==1){
                         sp.play(soundIds[0], volume, volume, 1, 0, 1);
-                    p.getB().addFruit();
-                    Player.turns++;
+                        Player.playerScore++;
+                    }
+                    else if (retMove[1]==2){
+                        sp.play(soundIds[4], volume, volume, 1, 0, 1);
+                        Player.playerScore+=3;
+                    }
+                    if (r.nextInt(10)<=2)
+                        p.getB().add5Fruit();
+                    else
+                        p.getB().addFruit();
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
@@ -150,11 +177,19 @@ public class Game extends AppCompatActivity {
             }
             public void onSwipeBottom() {
                 retMove = p.move("DOWN");
-                if(retMove[0]){
-                    if (retMove[1])
+                if(retMove[0]==1){
+                    if (retMove[1]==1){
                         sp.play(soundIds[0], volume, volume, 1, 0, 1);
-                    p.getB().addFruit();
-                    Player.turns++;
+                        Player.playerScore++;
+                    }
+                    else if (retMove[1]==2){
+                        sp.play(soundIds[4], volume, volume, 1, 0, 1);
+                        Player.playerScore+=3;
+                    }
+                    if (r.nextInt(10)<=2)
+                        p.getB().add5Fruit();
+                    else
+                        p.getB().addFruit();
                     if (p.checkBoard()==1){
                         screenView.imageNum = 1;
                         screenView.setOnTouchListener(null);
@@ -181,45 +216,45 @@ public class Game extends AppCompatActivity {
         Button again = view.findViewById(R.id.again);
         Button back = view.findViewById(R.id.backbtn);
         if (Score.get(size+"X"+size) instanceof  Integer){
-            if (((Integer)Score.get(size+"X"+size)).intValue()>=Player.turns)
-                msg.setText("Score: "+Player.turns+"\nGood Job!");
+            if (((Integer)Score.get(size+"X"+size)).intValue()>=Player.playerScore)
+                msg.setText("Score: "+Player.playerScore+"\nGood Job!");
 
             else{
-                if(Integer.parseInt(((String)World.get(size+"X"+size)).split(" ")[((String)World.get(size+"X"+size)).split(" ").length-1])<Player.turns){
-                    msg.setText("Score: "+Player.turns+"\nNew World Record!");
+                if(Integer.parseInt(((String)World.get(size+"X"+size)).split(" ")[((String)World.get(size+"X"+size)).split(" ").length-1])<Player.playerScore){
+                    msg.setText("Score: "+Player.playerScore+"\nNew World Record!");
                     starBig.setVisibility(View.VISIBLE);
-                    World.put(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.turns);
-                    Score.put(size+"X"+size,Player.turns);
+                    World.put(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.playerScore);
+                    Score.put(size+"X"+size,Player.playerScore);
                     isWorldScore = true;
                     updateWorld();
                     updateDB();
                 }
                 else {
-                    msg.setText("Score: "+Player.turns+"\nNew Record!");
+                    msg.setText("Score: "+Player.playerScore+"\nNew Record!");
                     starSmall.setVisibility(View.VISIBLE);
-                    Score.put(size+"X"+size,Player.turns);
+                    Score.put(size+"X"+size,Player.playerScore);
                     isHighScore = true;
                     updateDB();
                 }
             }
         }
         else{
-            if (((Long)Score.get(size+"X"+size)).intValue()>=Player.turns)
-                msg.setText("Score: "+Player.turns+"\nGood Job!");
+            if (((Long)Score.get(size+"X"+size)).intValue()>=Player.playerScore)
+                msg.setText("Score: "+Player.playerScore+"\nGood Job!");
             else{
-                if(Integer.parseInt(((String)World.get(size+"X"+size)).split(" ")[((String)World.get(size+"X"+size)).split(" ").length-1])<Player.turns){
-                    msg.setText("Score: "+Player.turns+"\nNew World Record!");
+                if(Integer.parseInt(((String)World.get(size+"X"+size)).split(" ")[((String)World.get(size+"X"+size)).split(" ").length-1])<Player.playerScore){
+                    msg.setText("Score: "+Player.playerScore+"\nNew World Record!");
                     starBig.setVisibility(View.VISIBLE);
-                    World.put(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.turns);
-                    Score.put(size+"X"+size,Player.turns);
+                    World.put(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.playerScore);
+                    Score.put(size+"X"+size,Player.playerScore);
                     isWorldScore = true;
                     updateWorld();
                     updateDB();
                 }
                 else{
-                    msg.setText("Score: "+Player.turns+"\nNew Record!");
+                    msg.setText("Score: "+Player.playerScore+"\nNew Record!");
                     starSmall.setVisibility(View.VISIBLE);
-                    Score.put(size+"X"+size,Player.turns);
+                    Score.put(size+"X"+size,Player.playerScore);
                     isHighScore = true;
                     updateDB();
                 }
@@ -336,7 +371,7 @@ public class Game extends AppCompatActivity {
 
     public void updateDB(){
         final DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getDisplayName());
-        docRef.update(size+"X"+size,Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
+        docRef.update(size+"X"+size,Player.playerScore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -358,7 +393,7 @@ public class Game extends AppCompatActivity {
 
     public void updateWorld(){
         final DocumentReference docRef = db.collection("Users").document("Top");
-        docRef.update(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.turns).addOnSuccessListener(new OnSuccessListener<Void>() {
+        docRef.update(size+"X"+size,mAuth.getCurrentUser().getDisplayName()+" "+Player.playerScore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();

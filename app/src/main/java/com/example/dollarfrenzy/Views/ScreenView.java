@@ -63,6 +63,12 @@ public class ScreenView extends View {
                                 d.draw(canvas);
                             }
                             break;
+
+                        case Board.FRUIT3:
+                                d = getResources().getDrawable(R.drawable.orange, null);
+                                d.setBounds((int)(i*tileSizeX), (int)(j*tileSizeY), (int)((i+1)*tileSizeX), (int)((j+1)*tileSizeY));
+                                d.draw(canvas);
+                                break;
                     }
 
                 }
