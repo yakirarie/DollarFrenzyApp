@@ -17,10 +17,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
     SharedPreferences sharedPreferences;
     boolean sound;
+    static int numberOfPlayerTypes= 3;
+    public static boolean[] playerType = new boolean[numberOfPlayerTypes];
     ImageButton soundButton;
 
 
@@ -75,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         actionBar.hide();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sound = sharedPreferences.getBoolean("sound",true);
+
+        playerType[0] = sharedPreferences.getBoolean("green1", true);;
+        for (int i=1 ;i<3;i++)
+            playerType[i] = sharedPreferences.getBoolean("green" + (i + 1), false);
+
+
+
         soundButton = findViewById(R.id.imageButton);
         if (sound)
             soundButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
@@ -220,6 +231,76 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void changePlayer(View view){
+        view.startAnimation(buttonClick);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.change_player,null);
+        final ImageView[] imvs = new ImageView[numberOfPlayerTypes];
+        imvs[0] = mView.findViewById(R.id.green);
+        imvs[1] = mView.findViewById(R.id.greenCowboy);
+        imvs[2] = mView.findViewById(R.id.greenScar);
+        builder.setView(mView);
+        for (int i=0 ; i<numberOfPlayerTypes;i++) {
+            if (playerType[i]) {
+                imvs[i].setBackground(getDrawable(R.drawable.background_play));
+                for (int j = 0; j < numberOfPlayerTypes; j++)
+                    if (j!=i)
+                        imvs[j].setBackground(null);
+
+            }
+        }
+        dialog = builder.create();
+        dialog.show();
+        imvs[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("green1",true);
+                editor.putBoolean("green2",false);
+                editor.putBoolean("green3",false);
+                editor.apply();
+                for (int i=0 ;i<3;i++)
+                    playerType[i] = sharedPreferences.getBoolean("green" + (i + 1), false);
+                imvs[0].setBackground(getDrawable(R.drawable.background_play));
+                imvs[1].setBackground(null);
+                imvs[2].setBackground(null);
+            }
+        });
+
+        imvs[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("green1",false);
+                editor.putBoolean("green2",true);
+                editor.putBoolean("green3",false);
+                editor.apply();
+                for (int i=0 ;i<3;i++)
+                    playerType[i] = sharedPreferences.getBoolean("green" + (i + 1), false);
+                imvs[0].setBackground(null);
+                imvs[1].setBackground(getDrawable(R.drawable.background_play));
+                imvs[2].setBackground(null);
+
+            }
+        });
+
+        imvs[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("green1",false);
+                editor.putBoolean("green2",false);
+                editor.putBoolean("green3",true);
+                editor.apply();
+                for (int i=0 ;i<3;i++)
+                    playerType[i] = sharedPreferences.getBoolean("green" + (i + 1), false);
+                imvs[0].setBackground(null);
+                imvs[1].setBackground(null);
+                imvs[2].setBackground(getDrawable(R.drawable.background_play));
+            }
+        });
+    }
+
     public void SeekBar(){
         chosenSize = findViewById(R.id.chosenSize);
         seekBar = findViewById(R.id.seekBar);
@@ -358,6 +439,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return scoresArray;
     }
+
+
 
 
 }

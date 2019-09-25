@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:padding="5dp">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="0dp"
+        android:text="Choose Player!"
+        android:textSize="45sp"
+        android:textStyle="bold"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true">
+
+            <ImageView
+                android:id="@+id/green"
+                android:layout_width="match_parent"
+                android:layout_height="255dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:src="@drawable/green"
+                android:background="@drawable/background_play"/>
+
+            <ImageView
+                android:id="@+id/greenCowboy"
+                android:layout_width="match_parent"
+                android:layout_height="255dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:src="@drawable/green_cowboy" />
+
+            <ImageView
+                android:id="@+id/greenScar"
+                android:layout_width="match_parent"
+                android:layout_height="255dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:src="@drawable/green_scar"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

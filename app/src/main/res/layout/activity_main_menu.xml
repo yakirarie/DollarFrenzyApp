@@ -108,6 +108,9 @@
             android:onClick="soundOnOff"
             android:layout_marginEnd="5dp"
             app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
+
+
+
         <Button
             android:id="@+id/button"
             android:layout_width="50dp"
@@ -117,7 +120,20 @@
             android:onClick="info"
             android:text="i"
             android:textAllCaps="false"
+            android:layout_marginEnd="5dp"
             android:textSize="24sp" />
+
+        <ImageButton
+            android:id="@+id/changePlayer"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:background="#2196F3"
+            android:lineSpacingExtra="18sp"
+            android:onClick="changePlayer"
+            android:src="@android:drawable/ic_menu_view"
+            android:textSize="24sp" />
+
        </LinearLayout>
 
 
